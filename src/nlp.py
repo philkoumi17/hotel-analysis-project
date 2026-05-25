@@ -1,8 +1,11 @@
 import spacy
 
-nlp = spacy.load("en_core_web_sm")
+# Load spaCy models
+nlp_en = spacy.load("en_core_web_sm")
+nlp_fr = spacy.load("fr_core_news_sm")
 
-COMFORT_KEYWORDS = [
+# English keywords
+COMFORT_KEYWORDS_EN = [
     "comfortable",
     "bed",
     "quiet",
@@ -13,13 +16,33 @@ COMFORT_KEYWORDS = [
     "comfort",
 ]
 
-SUSTAINABILITY_KEYWORDS = [
+SUSTAINABILITY_KEYWORDS_EN = [
     "eco",
     "sustainable",
     "green",
     "recycling",
     "environment",
     "energy",
+]
+
+# French keywords
+COMFORT_KEYWORDS_FR = [
+    "confortable",
+    "calme",
+    "silencieux",
+    "lit",
+    "propre",
+    "reposant",
+    "confort",
+]
+
+SUSTAINABILITY_KEYWORDS_FR = [
+    "écologique",
+    "durable",
+    "recyclage",
+    "environnement",
+    "vert",
+    "énergie",
 ]
 
 def analyze_review_topics(text):
@@ -30,17 +53,31 @@ def analyze_review_topics(text):
             "sustainability_mentions": 0,
         }
 
-    doc = nlp(text.lower())
+    text = text.lower()
+
+    # Process text with both models
+    doc_en = nlp_en(text)
+    doc_fr = nlp_fr(text)
 
     comfort_count = 0
     sustainability_count = 0
 
-    for token in doc:
+    # English analysis
+    for token in doc_en:
 
-        if token.text in COMFORT_KEYWORDS:
+        if token.text in COMFORT_KEYWORDS_EN:
             comfort_count += 1
 
-        if token.text in SUSTAINABILITY_KEYWORDS:
+        if token.text in SUSTAINABILITY_KEYWORDS_EN:
+            sustainability_count += 1
+
+    # French analysis
+    for token in doc_fr:
+
+        if token.text in COMFORT_KEYWORDS_FR:
+            comfort_count += 1
+
+        if token.text in SUSTAINABILITY_KEYWORDS_FR:
             sustainability_count += 1
 
     return {

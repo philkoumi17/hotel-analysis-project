@@ -33,20 +33,27 @@ def load_cities():
         ]
 
 def clean_for_ssis(value):
+
     if value is None:
         return ""
 
     value = str(value)
 
+    # Replace line breaks
     value = value.replace("\r\n", " | ")
     value = value.replace("\n", " | ")
     value = value.replace("\r", " | ")
-    value = value.replace("€", "")
+
+    # Replace dangerous separators
     value = value.replace(";", " ")
-    value = value.replace(",", " ")
+
+    # Remove double quotes
     value = value.replace('"', " ")
 
+    # Remove invisible control characters
     value = re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F]", " ", value)
+
+    # Normalize spaces
     value = re.sub(r"\s+", " ", value).strip()
 
     return value
@@ -128,7 +135,7 @@ def save_final_csv(all_hotels):
         index=False,
         encoding="utf-8-sig",
         sep=";",
-        quoting=csv.QUOTE_MINIMAL,
+        quoting=csv.QUOTE_ALL,
         lineterminator="\r\n",
     )
 
