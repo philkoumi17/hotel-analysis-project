@@ -38,21 +38,15 @@ def clean_for_ssis(value):
 
     value = str(value)
 
-    # Remove double quotes
-    value = value.replace('"', '')
-
-    # Replace line breaks
     value = value.replace("\r\n", " | ")
     value = value.replace("\n", " | ")
     value = value.replace("\r", " | ")
 
-    # Replace tabs
-    value = value.replace("\t", " ")
+    value = value.replace(";", " ")
+    value = value.replace(",", " ")
+    value = value.replace('"', " ")
 
-    # Remove hidden control characters
     value = re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F]", " ", value)
-
-    # Normalize spaces
     value = re.sub(r"\s+", " ", value).strip()
 
     return value
