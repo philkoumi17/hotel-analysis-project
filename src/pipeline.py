@@ -41,7 +41,7 @@ def clean_for_ssis(value):
     value = value.replace("\r\n", " | ")
     value = value.replace("\n", " | ")
     value = value.replace("\r", " | ")
-
+    value = value.replace("€", "")
     value = value.replace(";", " ")
     value = value.replace(",", " ")
     value = value.replace('"', " ")
