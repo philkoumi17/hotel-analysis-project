@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -82,6 +83,17 @@ def extract_hotel_data(file_path: str, city_name: str, max_hotels=None):
                 'span[data-testid="price-and-discounted-price"]',
             ],
         )
+        
+        price_match = re.search(r"(\d[\d\s.,]*)", price)
+
+        if price_match:
+            price = (
+                price_match.group(1)
+                .replace(" ", "")
+                .replace(",", "")
+            )
+        else:
+            price = ""
 
         review_score = get_first_text(
             card,
@@ -91,6 +103,13 @@ def extract_hotel_data(file_path: str, city_name: str, max_hotels=None):
                 '[aria-label*="Note"]',
             ],
         )
+        
+        score_match = re.search(r"(\d+[.,]\d+)", review_score)
+
+        if score_match:
+            review_score = score_match.group(1).replace(",", ".")
+        else:
+            review_score = ""
 
         review_count = get_first_text(
             card,
@@ -99,6 +118,16 @@ def extract_hotel_data(file_path: str, city_name: str, max_hotels=None):
                 '[class*="review"]',
             ],
         )
+        
+        review_count_match = re.search(r"(\d[\d\s]*)", review_count)
+
+        if review_count_match:
+            review_count = (
+                review_count_match.group(1)
+                .replace(" ", "")
+            )
+        else:
+            review_count = ""
 
         star_rating = get_first_attr(
             card,
