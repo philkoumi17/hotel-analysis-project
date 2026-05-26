@@ -1,4 +1,3 @@
-import re
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -7,6 +6,7 @@ from bs4 import BeautifulSoup
 BASE_URL = "https://www.booking.com"
 
 def clean_text(value):
+
     if not value:
         return ""
     return " ".join(value.get_text(" ", strip=True).split())
@@ -30,7 +30,6 @@ def get_first_attr(parent, selectors, attr):
         element = parent.select_one(selector)
         if element and element.get(attr):
             return clean_string(element.get(attr))
-
     return ""
 
 def extract_hotel_data(file_path: str, city_name: str, max_hotels=None):
@@ -83,17 +82,6 @@ def extract_hotel_data(file_path: str, city_name: str, max_hotels=None):
                 'span[data-testid="price-and-discounted-price"]',
             ],
         )
-        
-        price_match = re.search(r"(\d[\d\s.,]*)", price)
-
-        if price_match:
-            price = (
-                price_match.group(1)
-                .replace(" ", "")
-                .replace(",", "")
-            )
-        else:
-            price = ""
 
         review_score = get_first_text(
             card,
@@ -103,13 +91,6 @@ def extract_hotel_data(file_path: str, city_name: str, max_hotels=None):
                 '[aria-label*="Note"]',
             ],
         )
-        
-        score_match = re.search(r"(\d+[.,]\d+)", review_score)
-
-        if score_match:
-            review_score = score_match.group(1).replace(",", ".")
-        else:
-            review_score = ""
 
         review_count = get_first_text(
             card,
@@ -118,16 +99,6 @@ def extract_hotel_data(file_path: str, city_name: str, max_hotels=None):
                 '[class*="review"]',
             ],
         )
-        
-        review_count_match = re.search(r"(\d[\d\s]*)", review_count)
-
-        if review_count_match:
-            review_count = (
-                review_count_match.group(1)
-                .replace(" ", "")
-            )
-        else:
-            review_count = ""
 
         star_rating = get_first_attr(
             card,
@@ -167,9 +138,10 @@ def extract_hotel_data(file_path: str, city_name: str, max_hotels=None):
                 "review_score": review_score,
                 "review_count": review_count,
                 "review_scraping_status": "not_processed",
-                "reviews_text": "",
-                "reviews_positive_text": "",
-                "reviews_negative_text": "",
+
+                # IMPORTANT
+                "reviews": [],
+
                 "img_src": img_src,
                 "img_alt": img_alt,
             }

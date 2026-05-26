@@ -325,7 +325,6 @@ def scrape_reviews_for_hotels(
             try:
                 page.goto(url, wait_until="domcontentloaded", timeout=60000)
                 random_delay(2, 4)
-
             except Exception as e:
                 hotel["review_scraping_status"] = f"page_open_failed: {e}"
                 print(f"[{title}] Failed to open page: {e}")
@@ -346,7 +345,6 @@ def scrape_reviews_for_hotels(
                     timeout=10000,
                 )
                 random_delay(2, 3)
-
             except PlaywrightTimeoutError:
                 hotel["review_scraping_status"] = "review_popup_not_loaded"
                 print(f"[{title}] Review popup/section did not load.")

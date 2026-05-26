@@ -2,9 +2,9 @@ from src.pipeline import run_pipeline
 
 if __name__ == "__main__":
     run_pipeline(
-        scrape=True,
+        scrape=False,
         max_hotels_per_city=10,
         scrape_reviews=True,
-        max_review_pages_per_hotel=2,
-        max_scroll_rounds=5,
+        max_review_pages_per_hotel=4,
+        max_scroll_rounds=1,
     )
